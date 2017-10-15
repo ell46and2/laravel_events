@@ -109,6 +109,31 @@ class LoginTest extends TestCase
     }
 
     /** @test */
+    public function logging_in_when_user_is_blocked()
+    {
+        $user = factory(User::class)->states('approved')->create([
+            'email' => 'jane@example.com',
+            'password' => bcrypt('super-secret-password'),
+            'blocked' => true
+        ]);
+    
+
+        $response = $this->post('/login', [
+            'email' => 'jane@example.com',
+            'password' => 'super-secret-password'
+        ]);
+
+        // check that the user is redirected to the correct url
+        $response->assertRedirect('/login');
+
+        // check that the session has an error (laravel sets error for email if password and/or email is incorrect).
+        $response->assertSessionHasErrors('email');
+
+        // check that no user is logged in
+        $this->assertFalse(Auth::check());
+    }    
+
+    /** @test */
     public function logging_out_the_current_user()
     {
         Auth::login(factory(User::class)->states('approved')->create());

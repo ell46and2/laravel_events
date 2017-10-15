@@ -26,8 +26,10 @@ Route::post('/register', 'Auth\RegisterController@store')->name('register.store'
 Route::middleware(['admin'])->group(function() {
 	Route::get('/admin', 'AdminController@show')->name('admin.show');
 
-	Route::post('/admin/events', 'EventController@store')->name('admin.event-store');
-	Route::get('/admin/events', 'EventController@index')->name('admin.events');
+	Route::post('/admin/events', 'EventController@store')->name('admin.event.store');
+	Route::get('/admin/events', 'EventController@index')->name('admin.events.index');
+	Route::get('/admin/events/{event}/edit', 'EventController@edit')->name('admin.events.edit');
+	Route::patch('/admin/events/{event}', 'EventController@update')->name('admin.events.update');
 });
 
 

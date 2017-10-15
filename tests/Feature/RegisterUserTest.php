@@ -15,6 +15,23 @@ class RegisterUserTest extends TestCase
 {
     use DatabaseMigrations;
 
+    private function validParams($overrides = [])
+    {
+    	return array_merge([
+        	'first_name' => 'Jane',
+        	'last_name' => 'Doe',
+        	'email' => 'jane@example.com',
+        	'telephone' => '01242 222333',
+        	'address_1' => '123 street',
+        	'address_2' => 'Some place',
+        	'address_3' => 'Some town',
+        	'city' => 'Cheltenham',
+        	'postcode' => 'GL50 1ST',
+        	'password' => 'super-secret-password',
+        	'password_confirmation' => 'super-secret-password',
+        ], $overrides);
+    }
+
     /** @test */
     public function can_register_as_a_user()
     {

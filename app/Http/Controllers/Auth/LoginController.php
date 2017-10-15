@@ -35,7 +35,14 @@ class LoginController extends Controller
         if(Auth::user()->approved != 1) {
             Auth::logout();
             return redirect('/login')->withInput(request(['email']))->withErrors([
-                'email' => ['Your account is waiting approval']
+                'email' => ['Your account is pending approval']
+            ]);
+        }
+
+        if(Auth::user()->blocked) {
+            Auth::logout();
+            return redirect('/login')->withInput(request(['email']))->withErrors([
+                'email' => ['Your account has been blocked']
             ]);
         }
 

@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('postcode');
             $table->boolean('is_admin')->default(false);
             $table->boolean('approved')->default(false);
+            $table->boolean('blocked')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

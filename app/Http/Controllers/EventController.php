@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return view('admin.events');
+        return view('admin.events.index');
     }
 
     /**
@@ -41,7 +41,7 @@ class EventController extends Controller
             'name' => 'required',
             'address_1' => 'required',
             'city' => 'required',
-            'date' => 'required|date',
+            'date' => 'required|date|after:yesterday',
             'time' => 'required|date_format:g:ia',
         ]);
 
@@ -79,7 +79,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        return view('admin.events.edit', ['event' => $event]);
     }
 
     /**
@@ -89,9 +89,29 @@ class EventController extends Controller
      * @param  \App\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(Event $event)
     {
-        //
+        $this->validate(request(), [
+            'name' => 'required',
+            'address_1' => 'required',
+            'city' => 'required',
+            'date' => 'required|date|after:yesterday',
+            'time' => 'required|date_format:g:ia',
+        ]);
+
+        $event->update([
+            'name' => request('name'),
+            'address_1' => request('address_1'),
+            'address_2' => request('address_2'),
+            'address_3' => request('address_3'),
+            'city' => request('city'),
+            'date' => Carbon::parse(vsprintf('%s %s', [  // vsprintf() - Returns a formatted string
+                request('date'),
+                request('time')
+            ])),
+        ]);
+
+        return redirect()->route('admin.events.index');
     }
 
     /**

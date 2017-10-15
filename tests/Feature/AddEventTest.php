@@ -204,6 +204,21 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
+    public function date_cannot_be_in_the_past()
+    {
+        $user = factory(User::class)->states('admin')->create();
+
+        $response = $this->actingAs($user)->from('/admin/events/new')->post('/admin/events', $this->validParams([
+            'date' => Carbon::yesterday()->toDateString(),
+        ]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect('/admin/events/new');
+        $response->assertSessionHasErrors('date');
+        $this->assertEquals(0, Event::count());
+    }
+
+    /** @test */
     public function time_is_required()
     {
         $user = factory(User::class)->states('admin')->create();
@@ -219,7 +234,7 @@ class AddEventTest extends TestCase
     }
 
     /** @test */
-    public function date_must_be_a_valid_time()
+    public function time_must_be_a_valid_time()
     {
         $user = factory(User::class)->states('admin')->create();
 

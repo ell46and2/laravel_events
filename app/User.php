@@ -32,6 +32,21 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
+    public function approve()
+    {
+        $this->approved = true;
+    }
+
+    public function block()
+    {
+        $this->blocked = true;
+    }
+
+    public function unblock()
+    {
+        $this->blocked = false;
+    }
+
     public static function admin()
     {
         return self::where('is_admin', 1)->firstOrFail();
